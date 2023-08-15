@@ -21,6 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/tasks', [TaskController::class, 'index']);
+Route::put('/tasks/reorder', [TaskController::class, 'reorder']);
 Route::prefix('/task')->group(function () {
     Route::post('/store', [TaskController::class, 'store']);
     Route::put('/{id}', [TaskController::class, 'update']);

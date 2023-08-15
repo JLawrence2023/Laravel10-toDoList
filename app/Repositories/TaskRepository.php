@@ -33,6 +33,29 @@ class TaskRepository implements TaskContract
     {
         return $this->model->where('id', $id)->update($data);
     }
+    public function orderByPosition()
+    {
+        return Task::orderBy('position')->get();
+    }
+
+
+    public function reorderTasks($sourceItemId, $targetItemId)
+    {
+        $sourceTask = Task::find($sourceItemId);
+        $targetTask = Task::find($targetItemId);
+
+        if ($sourceTask && $targetTask) {
+            $sourcePosition = $sourceTask->position;
+            $targetPosition = $targetTask->position;
+
+            $sourceTask->position = $targetPosition;
+            $targetTask->position = $sourcePosition;
+
+            $sourceTask->save();
+            $targetTask->save();
+        }
+    }
+
 
     public function delete($id)
     {

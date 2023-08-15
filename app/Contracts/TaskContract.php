@@ -12,5 +12,9 @@ interface TaskContract
 
     public function update($id, array $data);
 
+    public function orderByPosition();
+
+    public function reorderTasks($sourceItemId, $targetItemId);
+
     public function delete($id);
 }

@@ -16,6 +16,7 @@ return new class () extends Migration {
             $table->string('title');
             $table->json('tag');
             $table->integer('list');
+            $table->integer('position')->nullable();
             $table->timestamps();
         });
 

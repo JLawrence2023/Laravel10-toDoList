@@ -18,10 +18,13 @@ class TaskController extends Controller
 
     public function index()
     {
+        $tasks = $this->taskRepository->orderByPosition();
+
         return response()->json([
-            'tasks' => $this->taskRepository->all(),
+            'tasks' => $tasks,
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -41,6 +44,9 @@ class TaskController extends Controller
         $newTask->title = $data['title'];
         $newTask->tag = $data['tag'];
         $newTask->list = $data['list'];
+        $maxPosition = Task::max('position');
+        $newTask->position = $maxPosition + 1;
+
 
         $newTask->save();
 
@@ -71,9 +77,7 @@ class TaskController extends Controller
     {
         try {
             $task = Task::findOrFail($id);
-
-            $data = $request->input('tasks'); // Assuming the JSON data key is 'tasks'
-
+            $data = $request->input('tasks');
             $task->title = $data['title'];
             $task->tag = $data['tag'];
             $task->list = $data['list'];
@@ -83,6 +87,16 @@ class TaskController extends Controller
         } catch (ModelNotFoundException $exception) {
             return response()->json(['error' => 'Task not found'], 404);
         }
+    }
+
+    public function reorder(Request $request)
+    {
+        $sourceItemId = $request->input('sourceItemId');
+        $targetItemId = $request->input('targetItemId');
+
+        $this->taskRepository->reorderTasks($sourceItemId, $targetItemId);
+
+        return response()->json(['message' => 'Tasks reordered successfully']);
     }
 
 
